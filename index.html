@@ -1,339 +1,251 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KOKUA｜カウンセリングシート</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mi-juカウンセリングシート</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <style>
-    :root {
-      --brand:#13ca5e;
-      --ink:#222;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --bg:#f7f7f7;
-      --danger:#dc2626;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;font-family:"Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";background:var(--bg);color:var(--ink);}
-    .wrap{max-width:680px;margin:0 auto;padding:20px}
-    .card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.05);overflow:hidden}
-    .card-header{background:linear-gradient(135deg,var(--brand),#0fa958);color:#fff;padding:22px 20px}
-    .title{margin:0;font-weight:700;font-size:20px;line-height:1.2}
-    .sub{margin:6px 0 0;font-size:12px;opacity:.9}
-    .card-body{padding:20px}
+    /* 既存デザイン踏襲 */
+    .side-nav{position:fixed;right:-5px;top:80%;transform:translateY(-50%) translateX(15px);background:#13ca5e;display:flex;flex-direction:column;align-items:center;padding:4px;border-radius:10px 0 0 10px;z-index:1000;width:35px}
+    .side-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;text-decoration:none;font-size:10px;margin:5px 0;padding:5px;border-radius:5px;width:30px;height:30px;text-align:center}
+    .side-nav a span{font-size:24px;position:absolute;left:0;top:13px}
+    @media(max-width:600px){.side-nav{right:2px;width:30px}.side-nav a{width:28px;height:28px}.side-nav a i{font-size:12px}}
 
-    .q{margin:18px 0}
-    .q label.qtitle{display:block;font-weight:700;margin-bottom:10px}
-    .badge{display:inline-block;vertical-align:middle;margin-right:8px;font-size:11px;padding:2px 6px;border-radius:6px}
-    .req{background:#fff;color:var(--brand);border:1.5px solid var(--brand)}
-    .opt{background:#eef9f5;color:#0f5132;border:1.5px solid #b7f7d2}
+    body{font-family:Arial,sans-serif;background:#f7f7f7;display:flex;justify-content:center;align-items:flex-start;height:100vh;margin:0;padding-top:20px}
+    .container{background:#fff;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,.1);width:90%;max-width:500px;padding:20px;box-sizing:border-box}
+    h1{background:linear-gradient(135deg,#13ca5e,#0fa958);color:#fff;padding:20px;border-radius:0 15px 0 45px;text-align:center;display:block;margin:-20px -15px 20px -15px;font-size:26px;font-weight:600;box-shadow:inset 0 -5px 10px rgba(0,0,0,.05)}
+    .label{display:block;margin-bottom:10px;padding:3px;font-weight:600;background:#13ca5e;color:#fff;border-radius:6px;font-size:18px;text-align:center}
 
-    input[type="text"], input[type="tel"], textarea, .field-help, .choice-grid{width:100%}
-    input[type="text"], input[type="tel"], textarea{appearance:none;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:16px;transition:border .2s, box-shadow .2s}
-    textarea{min-height:96px;resize:vertical}
-    input:focus, textarea:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px rgba(19,202,94,.15)}
-    .field-help{font-size:12px;color:var(--muted);margin-top:6px}
+    input[type="text"], input[type="tel"], textarea{width:100%;padding:12px;margin-bottom:16px;border:1px solid #ccc;border-radius:6px;box-sizing:border-box;font-size:16px;transition:.3s}
+    input:focus, textarea:focus{border-color:#13ca5e;outline:none;box-shadow:0 0 8px rgba(0,123,255,.2)}
 
-    .choice-grid{display:flex;gap:8px;flex-wrap:wrap}
-    .choice-grid .chip{flex:1 1 calc(50% - 8px);min-width:140px;background:#f9fafb;border:1px solid var(--line);padding:10px 12px;border-radius:10px;text-align:center;cursor:pointer;user-select:none}
-    .chip input{display:none}
-    .chip.active{background:#1f2937;color:#fff;border-color:#1f2937}
+    .group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .group button{flex:1;padding:10px;border:1px solid #ccc;border-radius:6px;background:#f7f7f7;cursor:pointer;white-space:nowrap}
+    .group button.active{background:#444;color:#fff}
 
+    .required{color:#fff;font-size:.6em;margin-left:5px;background:#ff0f0f;padding:0 5px;border-radius:3px}
+
+    .submit-button{width:100%;padding:15px;border:none;border-radius:6px;background:#dc3545;color:#fff;font-size:18px;cursor:pointer;transition:.2s}
+    .submit-button[disabled]{opacity:.6;cursor:not-allowed;pointer-events:none}
+
+    .info-text{margin:12px 0;background:#f8f9fa;border:1px solid #ced4da;border-radius:8px;padding:12px;font-size:13px}
     .hidden{display:none}
-    .hr{height:1px;background:var(--line);margin:18px 0}
-
-    .actions{padding:16px 20px;border-top:1px solid var(--line);background:#fff;position:sticky;bottom:0}
-    .btn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 16px;border:none;border-radius:10px;background:#1f2937;color:#fff;font-weight:700;font-size:16px;cursor:pointer}
-    $1
-
-    /* 連打防止：無効化時の見た目 */
-    .btn[disabled]{opacity:.6; pointer-events:none; filter:grayscale(20%);} 
-
-    .error{font-size:12px;color:var(--danger);margin-top:6px}
-
-    footer{margin:14px 0 0;text-align:center;color:var(--muted);font-size:11px}
   </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="card">
-    <div class="card-header">
-      <h1 class="title">KOKUA｜カウンセリングシート</h1>
-      <p class="sub">※「必須」項目をご入力のうえ、下部の送信ボタンを押してください</p>
-    </div>
-    <div class="card-body" id="formRoot">
-
-      <!-- ① お名前（必須） -->
-      <div class="q" data-key="name">
-        <label class="qtitle"><span class="badge req">必須</span>① お名前</label>
-        <input type="text" id="name" placeholder="例）山田 花子" autocomplete="name" />
-        <div class="error" data-err="name"></div>
-      </div>
-
-      <!-- ② お電話番号（必須） -->
-      <div class="q" data-key="tel">
-        <label class="qtitle"><span class="badge req">必須</span>② お電話番号</label>
-        <input type="tel" id="tel" inputmode="tel" placeholder="例）090-1234-5678" autocomplete="tel" />
-        <div class="field-help">ハイフン有り・無しどちらでも可</div>
-        <div class="error" data-err="tel"></div>
-      </div>
-
-      <!-- ③ 生年月日（任意） -->
-      <div class="q" data-key="birthday">
-        <label class="qtitle"><span class="badge opt">任意</span>③ 生年月日</label>
-        <input type="text" id="birthday" placeholder="例）1998/03/15" />
-      </div>
-
-      <!-- ④ お住まい（必須：回答例文をプレースホルダーに挿入） -->
-      <div class="q" data-key="address">
-        <label class="qtitle"><span class="badge req">必須</span>④ お住まい</label>
-        <input type="text" id="address" placeholder="例）京都市中京区烏丸通◯◯　（最寄り：烏丸駅）」 />
-        <div class="field-help">（構築担当メモ）回答欄に例文を表示しています。必要に応じて書き換えてください。</div>
-        <div class="error" data-err="address"></div>
-      </div>
-
-      <!-- ⑤ アレルギー（必須：ある→自由記載表示） -->
-      <div class="q" data-key="allergy">
-        <label class="qtitle"><span class="badge req">必須</span>⑤ アレルギーはありますか？</label>
-        <div class="choice-grid" role="group" aria-label="アレルギー">
-          <label class="chip"><input type="radio" name="allergy" value="ある" />ある</label>
-          <label class="chip"><input type="radio" name="allergy" value="なし" />なし</label>
-        </div>
-        <div id="allergyDetailWrap" class="hidden" aria-live="polite">
-          <div class="hr"></div>
-          <label class="qtitle" style="font-weight:600">アレルギー内容（自由記載）</label>
-          <textarea id="allergyDetail" placeholder="例）花粉、金属（ニッケル）、化粧品（銘柄など）"></textarea>
-          <div class="error" data-err="allergyDetail"></div>
-        </div>
-        <div class="error" data-err="allergy"></div>
-      </div>
-
-      <!-- ⑥ 過去にまつエク経験（必須：はい/いいえ） -->
-      <div class="q" data-key="hadExtensions">
-        <label class="qtitle"><span class="badge req">必須</span>⑥ 過去にまつエクを受けたことはありますか？</label>
-        <div class="choice-grid" role="group" aria-label="まつエク経験">
-          <label class="chip"><input type="radio" name="hadExtensions" value="はい" />はい</label>
-          <label class="chip"><input type="radio" name="hadExtensions" value="いいえ" />いいえ</label>
-        </div>
-        <div class="error" data-err="hadExtensions"></div>
-      </div>
-
-      <!-- ⑦ 普段使用しているもの（必須：単一選択） -->
-      <div class="q" data-key="eyeWear">
-        <label class="qtitle"><span class="badge req">必須</span>⑦ 普段使用しているものはありますか？</label>
-        <div class="choice-grid" role="group" aria-label="普段使用しているもの">
-          <label class="chip"><input type="radio" name="eyeWear" value="メガネ" />メガネ</label>
-          <label class="chip"><input type="radio" name="eyeWear" value="コンタクトレンズ" />コンタクトレンズ</label>
-          <label class="chip"><input type="radio" name="eyeWear" value="なし" />なし</label>
-        </div>
-        <div class="error" data-err="eyeWear"></div>
-      </div>
-
-      <!-- ⑧ 希望スタイル（任意：回答例文をプレースホルダーに挿入） -->
-      <div class="q" data-key="style">
-        <label class="qtitle"><span class="badge opt">任意</span>⑧ 希望スタイル</label>
-        <textarea id="style" placeholder="例）つり目にしたい／たれ目にしたい／目を大きくしたい など"></textarea>
-      </div>
-
-    </div>
-    <div class="actions">
-      <button class="btn" id="submitBtn" type="button">この内容で送信する</button>
-      <footer>※ 送信するとLINEトークに自動送信されます</footer>
-    </div>
+  <!-- 右側の追従ナビ -->
+  <div class="side-nav" id="sideNav">
+    <a href="#section-message">
+      <span>⇩</span>
+      <i class="fas fa-comment"></i>
+    </a>
   </div>
-</div>
 
-<!-- LIFF SDK -->
-<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-<script>
-  // ======== 設定（必ず修正） ========
-  const LIFF_ID = "YOUR_LIFF_ID"; // ← あなたのLIFF IDに差し替え
-  // ==================================
+  <!-- 本文 -->
+  <div class="container">
+    <h1>mi-ju<br>カウンセリングシート</h1>
+    <div class="info-text">以下全て入力後【送信】ボタンを押してください（※は必須）。</div>
 
-  // ユーティリティ
-  const $ = (sel, ctx=document) => ctx.querySelector(sel);
-  const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+    <!-- ① お名前（必須） -->
+    <div class="label"><span class="required">必須</span>① お名前</div>
+    <textarea id="name" rows="1" placeholder="例）山田 花子"></textarea>
 
-  // 送信ボタン多重タップ防止フラグ
-  let isSubmitting = false;
+    <!-- ② お電話番号（必須） -->
+    <div class="label"><span class="required">必須</span>② お電話番号</div>
+    <textarea id="tel" rows="1" placeholder="例）090-1234-5678"></textarea>
 
-  // ラジオ風チップのActive制御
-  function initChips(){
-    $$(".choice-grid").forEach(grid=>{
-      grid.addEventListener("click", (e)=>{
-        const lab = e.target.closest("label.chip");
-        if(!lab) return;
-        const input = lab.querySelector("input");
-        const name = input?.name;
-        if(!name) return;
-        // 単一選択想定：同一nameのactiveを外して自分に付与
-        $$("label.chip input[name='"+name+"']").forEach(i=>{
-          i.closest("label.chip").classList.remove("active");
-        });
-        input.checked = true;
-        lab.classList.add("active");
-        onChange(name);
-      });
+    <!-- ③ 生年月日（任意） -->
+    <div class="label">③ 生年月日（任意）</div>
+    <input type="text" id="birthday" placeholder="例）1998/03/15">
+
+    <!-- ④ お住まい（必須：回答例文を表示） -->
+    <div class="label"><span class="required">必須</span>④ お住まい</div>
+    <input type="text" id="address" placeholder="例）京都市中京区（最寄り：烏丸駅）">
+
+    <!-- ⑤ アレルギー（必須） -->
+    <div class="label"><span class="required">必須</span>⑤ アレルギーはありますか？</div>
+    <div class="group" data-key="allergy">
+      <button type="button" data-value="ある" onclick="selectSingle('allergy', this)">ある</button>
+      <button type="button" data-value="なし" onclick="selectSingle('allergy', this)">なし</button>
+    </div>
+    <div id="allergyDetailWrap" class="hidden">
+      <div class="label">アレルギー内容（自由記載）</div>
+      <textarea id="allergyDetail" rows="2" placeholder="例）花粉／金属（ニッケル）／化粧品（銘柄など）"></textarea>
+    </div>
+
+    <!-- ⑥ 過去にまつエクを受けたことはありますか？（必須） -->
+    <div class="label"><span class="required">必須</span>⑥ 過去にまつエクを受けたことはありますか？</div>
+    <div class="group" data-key="hadExtensions">
+      <button type="button" data-value="はい" onclick="selectSingle('hadExtensions', this)">はい</button>
+      <button type="button" data-value="いいえ" onclick="selectSingle('hadExtensions', this)">いいえ</button>
+    </div>
+
+    <!-- ⑦ 普段使用しているものはありますか？（必須） -->
+    <div class="label"><span class="required">必須</span>⑦ 普段使用しているものはありますか？</div>
+    <div class="group" data-key="eyeWear">
+      <button type="button" data-value="メガネ" onclick="selectSingle('eyeWear', this)">メガネ</button>
+      <button type="button" data-value="コンタクトレンズ" onclick="selectSingle('eyeWear', this)">コンタクトレンズ</button>
+      <button type="button" data-value="なし" onclick="selectSingle('eyeWear', this)">なし</button>
+    </div>
+
+    <!-- ⑧ 希望スタイル（任意） -->
+    <div class="label">⑧ 希望スタイル（任意）</div>
+    <textarea id="style" rows="3" placeholder="例）つり目にしたい／たれ目にしたい／目を大きくしたい など"></textarea>
+
+    <button class="submit-button" id="submitBtn" onclick="submitForm()" id="section-message">送信</button>
+  </div>
+
+  <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+  <script>
+    // あなたのLIFF IDに差し替え可能
+    const LIFF_ID = '2008235139-3OqOyK9G';
+
+    // 単一選択の状態
+    const state = { allergy:'', hadExtensions:'', eyeWear:'' };
+
+    function selectSingle(key, el){
+      const group = document.querySelector(`.group[data-key="${key}"]`);
+      group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      el.classList.add('active');
+      state[key] = el.dataset.value;
+
+      // ⑤ アレルギー「ある」→詳細欄表示
+      if(key === 'allergy'){
+        const wrap = document.getElementById('allergyDetailWrap');
+        if(state.allergy === 'ある'){
+          wrap.classList.remove('hidden');
+        } else {
+          wrap.classList.add('hidden');
+          document.getElementById('allergyDetail').value='';
+        }
+      }
+    }
+
+    // LIFF初期化
+    document.addEventListener('DOMContentLoaded', async ()=>{
+      try{
+        if(window.liff){
+          await liff.init({ liffId: LIFF_ID });
+        }
+      }catch(e){
+        console.warn('LIFF初期化失敗:', e);
+      }
     });
-  }
 
-  // 依存表示ロジック
-  function onChange(name){
-    if(name === "allergy"){
-      const val = getRadioValue("allergy");
-      const wrap = $("#allergyDetailWrap");
-      if(val === "ある"){
-        wrap.classList.remove("hidden");
-      }else{
-        wrap.classList.add("hidden");
-        $("#allergyDetail").value = "";
+    function validate(){
+      const name = document.getElementById('name').value.trim();
+      const telRaw = document.getElementById('tel').value.trim();
+      const tel = telRaw.replace(/-/g, '');
+      const address = document.getElementById('address').value.trim();
+
+      if(!name){
+        alert('お名前を入力してください。');
+        return false;
       }
-    }
-  }
-
-  function getRadioValue(name){
-    const hit = $$("input[name='"+name+"']").find(i=>i.checked);
-    return hit ? hit.value : "";
-  }
-
-  function validate(){
-    let ok = true;
-    // ①名前
-    const name = $("#name").value.trim();
-    const errName = $('[data-err="name"]');
-    if(!name){ errName.textContent = "お名前は必須です"; ok = false; } else { errName.textContent = ""; }
-
-    // ②電話
-    const tel = $("#tel").value.trim();
-    const errTel = $('[data-err="tel"]');
-    const telOk = /^0\d{9,10}$/.test(tel.replace(/-/g, ''));
-    if(!tel){ errTel.textContent = "お電話番号は必須です"; ok = false; }
-    else if(!telOk){ errTel.textContent = "電話番号の形式をご確認ください（例：09012345678）"; ok = false; }
-    else { errTel.textContent = ""; }
-
-    // ④住所
-    const address = $("#address").value.trim();
-    const errAddress = $('[data-err="address"]');
-    if(!address){ errAddress.textContent = "お住まいは必須です"; ok = false; } else { errAddress.textContent = ""; }
-
-    // ⑤アレルギー
-    const allergy = getRadioValue("allergy");
-    const errAllergy = $('[data-err="allergy"]');
-    if(!allergy){ errAllergy.textContent = "アレルギーの有無を選択してください"; ok = false; } else { errAllergy.textContent = ""; }
-
-    if(allergy === "ある"){
-      const detail = $("#allergyDetail").value.trim();
-      const errDetail = $('[data-err="allergyDetail"]');
-      if(!detail){ errDetail.textContent = "アレルギー内容をご記入ください"; ok = false; } else { errDetail.textContent = ""; }
-    } else {
-      $('[data-err="allergyDetail"]').textContent = "";
-    }
-
-    // ⑥まつエク経験
-    const had = getRadioValue("hadExtensions");
-    const errHad = $('[data-err="hadExtensions"]');
-    if(!had){ errHad.textContent = "はい／いいえを選択してください"; ok = false; } else { errHad.textContent = ""; }
-
-    // ⑦普段使用
-    const eye = getRadioValue("eyeWear");
-    const errEye = $('[data-err="eyeWear"]');
-    if(!eye){ errEye.textContent = "一つ選択してください"; ok = false; } else { errEye.textContent = ""; }
-
-    return ok;
-  }
-
-  function buildMessage(){
-    const v = {
-      name: $("#name").value.trim(),
-      tel: $("#tel").value.trim(),
-      birthday: $("#birthday").value.trim(),
-      address: $("#address").value.trim(),
-      allergy: getRadioValue("allergy"),
-      allergyDetail: $("#allergyDetail").value.trim(),
-      hadExtensions: getRadioValue("hadExtensions"),
-      eyeWear: getRadioValue("eyeWear"),
-      style: $("#style").value.trim(),
-    };
-
-    const lines = [];
-    lines.push("≪カウンセリングシート≫");
-    lines.push(`① お名前\n・${v.name}`);
-    lines.push(`② お電話番号\n・${v.tel}`);
-    if(v.birthday) lines.push(`③ 生年月日\n・${v.birthday}`);
-    lines.push(`④ お住まい\n・${v.address}`);
-    lines.push(`⑤ アレルギー\n・${v.allergy}` + (v.allergy === 'ある' && v.allergyDetail ? `\n・内容：${v.allergyDetail}` : ''));
-    lines.push(`⑥ 過去にまつエク経験\n・${v.hadExtensions}`);
-    lines.push(`⑦ 普段使用しているもの\n・${v.eyeWear}`);
-    if(v.style) lines.push(`⑧ 希望スタイル\n・${v.style}`);
-
-    return lines.join("\n\n");
-  }
-
-  async function ensureLiff(){
-    if(!window.liff) throw new Error("LIFF SDK not loaded");
-    if(!liff.isInClient()) return; // ブラウザ単体確認用に未ログインでも通す
-    if(!liff.isInitialized()){
-      await liff.init({ liffId: LIFF_ID });
-    }
-  }
-
-  async function send(){
-    const text = buildMessage();
-    // liff外（ブラウザ）での動作確認：アラート表示のみ
-    if(!window.liff || !liff.isInClient()){
-      alert("プレビュー（LIFF外）：\n\n"+text);
-      return;
-    }
-    await liff.sendMessages([{type:'text', text}]);
-    alert('ご記入ありがとうございます。送信しました。');
-    liff.closeWindow();
-  }
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    initChips();
-    $$('input[name="allergy"]').forEach(i=>i.addEventListener('change', ()=>onChange('allergy')));
-
-    $('#submitBtn').addEventListener('click', async () => {
-      if(isSubmitting) return; // 多重タップ防止
-      if(!validate()){
-        window.scrollTo({top:0, behavior:'smooth'});
-        return;
+      if(!tel){
+        alert('お電話番号を入力してください。');
+        return false;
       }
+      const telOk = /^0\d{9,10}$/.test(tel);
+      if(!telOk){
+        alert('電話番号の形式をご確認ください（例：09012345678）');
+        return false;
+      }
+      if(!address){
+        alert('お住まいを入力してください。');
+        return false;
+      }
+      if(!state.allergy){
+        alert('アレルギーの有無を選択してください。');
+        return false;
+      }
+      if(state.allergy==='ある' && !document.getElementById('allergyDetail').value.trim()){
+        alert('アレルギー内容をご記入ください。');
+        return false;
+      }
+      if(!state.hadExtensions){
+        alert('まつエク経験の有無を選択してください。');
+        return false;
+      }
+      if(!state.eyeWear){
+        alert('普段使用しているものを選択してください。');
+        return false;
+      }
+      return true;
+    }
 
-      const btn = $('#submitBtn');
-      const prevText = btn.textContent;
-      isSubmitting = true;
-      btn.disabled = true;
+    function buildMessage(){
+      const v = {
+        name: document.getElementById('name').value.trim(),
+        tel : document.getElementById('tel').value.trim(),
+        birthday: document.getElementById('birthday').value.trim(),
+        address: document.getElementById('address').value.trim(),
+        allergy: state.allergy,
+        allergyDetail: document.getElementById('allergyDetail').value.trim(),
+        hadExtensions: state.hadExtensions,
+        eyeWear: state.eyeWear,
+        style: document.getElementById('style').value.trim(),
+      };
+
+      const lines = [
+        '≪カウンセリングシート≫',
+        `① お名前\n・${v.name}`,
+        `② お電話番号\n・${v.tel}`,
+        v.birthday ? `③ 生年月日\n・${v.birthday}` : '',
+        `④ お住まい\n・${v.address}`,
+        `⑤ アレルギー\n・${v.allergy}` + (v.allergy==='ある' && v.allergyDetail ? `\n・内容：${v.allergyDetail}` : ''),
+        `⑥ 過去にまつエクを受けたことはありますか？\n・${v.hadExtensions}`,
+        `⑦ 普段使用しているもの\n・${v.eyeWear}`,
+        v.style ? `⑧ 希望スタイル\n・${v.style}` : ''
+      ].filter(Boolean);
+
+      return lines.join('\n\n');
+    }
+
+    // 多重送信防止用フラグ
+    let submitting = false;
+
+    async function submitForm(){
+      if(submitting) return; // 連打ガード
+
+      if(!validate()) return;
+
+      // ボタンを無効化＆表示切替
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.textContent;
       btn.textContent = '送信中…';
+      btn.setAttribute('disabled', 'true');
+      btn.setAttribute('aria-busy', 'true');
+      submitting = true;
+
+      const text = buildMessage();
 
       try{
-        await ensureLiff();
-        await send();
+        if(window.liff && liff.isInClient()){
+          await liff.sendMessages([{ type:'text', text }]);
+          alert('ご記入ありがとうございます。送信しました。');
+          liff.closeWindow();
+        } else {
+          // LIFF外プレビュー
+          alert('【プレビュー（LIFF外）】\n\n' + text);
+          // プレビュー時は完了後にボタンを戻す
+          btn.textContent = originalText;
+          btn.removeAttribute('disabled');
+          btn.removeAttribute('aria-busy');
+          submitting = false;
+        }
       }catch(err){
-        console.error(err);
-        alert('送信に失敗しました。ネットワーク環境をご確認のうえ再度お試しください。');
-      } finally {
-        // LIFF外プレビューやエラー時は元に戻す（LIFF内成功時はcloseWindowされる）
-        btn.disabled = false;
-        btn.textContent = prevText;
-        isSubmitting = false;
+        console.error('メッセージの送信に失敗しました', err);
+        alert('送信に失敗しました。通信環境をご確認ください。');
+
+        // エラー時は再送できるように戻す
+        btn.textContent = originalText;
+        btn.removeAttribute('disabled');
+        btn.removeAttribute('aria-busy');
+        submitting = false;
       }
-    });
-        return;
-      }
-      try{
-        await ensureLiff();
-        await send();
-      }catch(err){
-        console.error(err);
-        alert('送信に失敗しました。ネットワーク環境をご確認のうえ再度お試しください。');
-      }
-    });
-  });
-</script>
+    }
+  </script>
 </body>
 </html>
