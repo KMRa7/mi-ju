@@ -81,6 +81,12 @@
       <button type="button" data-value="いいえ" onclick="selectSingle('hadExtensions', this)">いいえ</button>
     </div>
 
+    <div class="label"><span class="required">必須</span>⑦ 過去にまつ毛パーマを受けたことはありますか？</div>
+    <div class="group" data-key="hadPerm">
+      <button type="button" data-value="はい" onclick="selectSingle('hadPerm', this)">はい</button>
+      <button type="button" data-value="いいえ" onclick="selectSingle('hadPerm', this)">いいえ</button>
+    </div>
+
     <!-- ⑦ 普段使用しているものはありますか？（必須） -->
     <div class="label"><span class="required">必須</span>⑦ 普段使用しているものはありますか？</div>
     <div class="group" data-key="eyeWear">
@@ -102,7 +108,7 @@
     const LIFF_ID = '2008235139-3OqOyK9G';
 
     // 単一選択の状態
-    const state = { allergy:'', hadExtensions:'', eyeWear:'' };
+    const state = { allergy:'', hadExtensions:'', hadPerm:'', eyeWear:'' };
 
     function selectSingle(key, el){
       const group = document.querySelector(`.group[data-key="${key}"]`);
@@ -168,6 +174,10 @@
         alert('まつエク経験の有無を選択してください。');
         return false;
       }
+      if(!state.hadPerm){
+        alert('まつ毛パーマ経験の有無を選択してください。');
+        return false;
+      }
       if(!state.eyeWear){
         alert('普段使用しているものを選択してください。');
         return false;
@@ -184,6 +194,7 @@
         allergy: state.allergy,
         allergyDetail: document.getElementById('allergyDetail').value.trim(),
         hadExtensions: state.hadExtensions,
+        hadPerm: state.hadPerm,            // ← 追加
         eyeWear: state.eyeWear,
         style: document.getElementById('style').value.trim(),
       };
@@ -196,8 +207,9 @@
         `④ お住まい\n・${v.address}`,
         `⑤ アレルギー\n・${v.allergy}` + (v.allergy==='ある' && v.allergyDetail ? `\n・内容：${v.allergyDetail}` : ''),
         `⑥ 過去にまつエクを受けたことはありますか？\n・${v.hadExtensions}`,
-        `⑦ 普段使用しているもの\n・${v.eyeWear}`,
-        v.style ? `⑧ 希望スタイル\n・${v.style}` : ''
+        `⑦ 過去にまつ毛パーマを受けたことはありますか？\n・${v.hadPerm}`,      // ← 追加
+        `⑧ 普段使用しているもの\n・${v.eyeWear}`,                                 // ← 番号繰り下げ
+        v.style ? `⑨ 希望スタイル\n・${v.style}` : ''                              // ← 番号繰り下げ
       ].filter(Boolean);
 
       return lines.join('\n\n');
